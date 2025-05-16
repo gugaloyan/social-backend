@@ -24,7 +24,7 @@ app.use('/api/friends', friendshipRoutes);
 
 // Health check
 app.get('/', (req, res) => {
-  res.send('HI HI !');
+  res.send('HI!');
 });
 
 
