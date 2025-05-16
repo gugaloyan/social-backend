@@ -1,4 +1,4 @@
-import { db } from '../config/db';
+import { db, query } from '../config/db';
 import { FriendPendingResponse, FriendRequest } from '../types/friend-request';
 import { areUsersAlreadyFriends } from './friendship-service';
 
@@ -12,7 +12,7 @@ export const sendFriendRequest = async (
     throw new Error('You cannot send a request to yourself.');
   }
 
-  const userResult = await db.query(
+  const userResult = await query(
     `SELECT id FROM users WHERE id = $1`,
     [receiverId]
   );
@@ -21,7 +21,7 @@ export const sendFriendRequest = async (
     throw new Error(`User with receiverId ${receiverId} not found.`);
   }
 
-  const existingRequest = await db.query(
+  const existingRequest = await query(
     `SELECT * FROM friend_requests 
      WHERE requester_id = $1 AND receiver_id = $2 AND status = 'pending'`,
     [requesterId, receiverId]
@@ -36,7 +36,7 @@ export const sendFriendRequest = async (
     throw new Error('You are already friends');
   }
 
-  const result = await db.query(
+  const result = await query(
     `INSERT INTO friend_requests (requester_id, receiver_id, status)
      VALUES ($1, $2, 'pending')
      RETURNING id, requester_id, receiver_id, status, created_at`,
@@ -85,7 +85,7 @@ export const acceptRequest = async (requesterId: number, receiverId: number): Pr
 
   
   export const declineRequest = async (requesterId: number, receiverId: number): Promise<boolean> => {
-    const result = await db.query(
+    const result = await query(
       `UPDATE friend_requests
        SET status = 'declined'
        WHERE requester_id = $1 AND receiver_id = $2 AND status = 'pending'`,
@@ -99,7 +99,7 @@ export const acceptRequest = async (requesterId: number, receiverId: number): Pr
 
 
 export const getPendingFriendRequests = async (userId: number): Promise<FriendPendingResponse[]> => {
-  const result = await db.query(
+  const result = await query(
     `SELECT fr.id, fr.status, fr.requester_id, u.first_name, u.last_name, u.age, u.email
      FROM friend_requests fr
      JOIN users u ON fr.requester_id = u.id

@@ -15,6 +15,11 @@ export const register = async (userData: UserInput) => {
 
 export const login = async (email: string, password: string) => {
   const user = await getUserByEmail(email);
+
+  if (user == null) {
+    throw new Error('User not found');
+  }
+
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
