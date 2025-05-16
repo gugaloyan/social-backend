@@ -3,7 +3,7 @@ name: Deploy to Railway
 on:
   push:
     branches:
-      - main
+      - master
       - dev  
 
 jobs:
@@ -28,7 +28,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Deploy to Railway
-        run: npx railway up --environment production
+        run: railway up --environment production
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
