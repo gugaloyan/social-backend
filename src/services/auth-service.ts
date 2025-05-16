@@ -1,19 +1,20 @@
 import bcrypt from 'bcrypt';
-import { UserInput } from '../types/user';
+import { User, UserInput } from '../types/user';
 import { createUser as createUserInDb, getUserByEmail } from './user-service';
 import jwt from 'jsonwebtoken';
 import { JWT_EXPIRES_IN } from '../config/constant';
+import { AuthResponse } from '../types/auth';
 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
 
-export const register = async (userData: UserInput) => {
+export const register = async (userData: UserInput): Promise<Omit<User, 'password'>> => {
   const hashedPassword = await bcrypt.hash(userData.password, 10);
   return await createUserInDb({ ...userData, password: hashedPassword });
 };
 
 
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string): Promise<AuthResponse> => {
   const user = await getUserByEmail(email);
 
   if (user == null) {

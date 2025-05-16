@@ -5,7 +5,7 @@ import { initTables } from './config/db';
 
 dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 (async () => {
   try {

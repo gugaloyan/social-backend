@@ -47,6 +47,7 @@ src/
 
 Create a `.env` file in your project root:
 
+NODE_ENV=local
 DATABASE_URL=postgresql://postgres:123@localhost:5432/postgres
 PORT=3001
 JWT_SECRET=""
@@ -71,3 +72,7 @@ npm install
 # Run with nodemon
 npm run dev
 
+```
+## Swagger
+local: http://localhost:3001/api-docs
+dev: https://social-backend-production-3b37.up.railway.app/api-docs
